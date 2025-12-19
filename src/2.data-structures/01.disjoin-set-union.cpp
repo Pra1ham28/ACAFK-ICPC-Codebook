@@ -1,27 +1,27 @@
 struct DSU {
-    vector<int> par;
-    vector<int> sz;
-
-    DSU(int n) {
-        FOR(i, 0, n) {
-            par.pb(i);
-            sz.pb(1);
+    vector<int> par, rnk;
+    DSU(int n){
+        par.assign(n+1,0);
+        rnk.assign(n+1,1);
+        for(int i=0;i<=n;i++){
+            par[i]=i;
         }
     }
-
-    int find(int a) {
-        return par[a] = par[a] == a ? a : find(par[a]);
+    int find_set(int x){
+        if(par[x]==x) return x;
+        return par[x]=find_set(par[x]);
     }
-
-    bool same(int a, int b) {
-        return find(a) == find(b);
-    }
-
-    void unite(int a, int b) {
-        a = find(a);
-        b = find(b);
-        if(sz[a] > sz[b]) swap(a, b);
-        sz[b] += sz[a];
-        par[a] = b;
+    bool union_set(int a, int b){
+        int p1=find_set(a), p2=find_set(b);
+        if(p1==p2) return 0;
+        if(rnk[p1]>rnk[p2]){
+            par[p2]=p1;
+            rnk[p1]+=rnk[p2];
+        }
+        else{
+            par[p1]=p2;
+            rnk[p2]+=rnk[p1];
+        }
+        return 1;
     }
 };
